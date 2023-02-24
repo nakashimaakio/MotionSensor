@@ -12,99 +12,71 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 	private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-	private var sensorManager: SensorManager? = null
+	private lateinit var sensorManager: SensorManager
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
 
-		sensorManager = getSystemService(SENSOR_SERVICE) as? SensorManager
+		sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 	}
 
 	override fun onResume() {
 		super.onResume()
-		val gyro = sensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-		if (gyro != null) sensorManager?.registerListener(this, gyro, SensorManager.SENSOR_DELAY_UI)
+
+		//ジャイロ
+		val gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+		if (gyro != null) {
+			sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_UI)
+		}
+
+		//向き
+		val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+		if (accelerometer != null) {
+			sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI)
+		}
+
+		//向き
+		val magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+		if (magneticField != null) {
+			sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI)
+		}
 	}
 
 	override fun onPause() {
 		super.onPause()
-		sensorManager?.unregisterListener(this)
+		sensorManager.unregisterListener(this)
 	}
 
 	override fun onSensorChanged(event: SensorEvent) {
+		//ジャイロ
 		if (event.sensor.type == Sensor.TYPE_GYROSCOPE) {
 			val sensorX = event.values[0]
 			val sensorY = event.values[1]
 			val sensorZ = event.values[2]
 			binding.textView.text = "Gyroscope: %.1f, %.1f, %.1f".format(sensorX, sensorY, sensorZ)
-
-			showInfo(event)
 		}
-	}
 
-	// センサーの各種情報を表示する
-	private fun showInfo(event: SensorEvent) {
-		// センサー名
-		val info = StringBuffer("Name: ")
-		info.append(event.sensor.name)
-		info.append("\n")
+		//向き
+		val accelerometerReading = FloatArray(3)
+		val magnetometerReading = FloatArray(3)
 
-		// ベンダー名
-		info.append("Vendor: ")
-		info.append(event.sensor.vendor)
-		info.append("\n")
-
-		// 型番
-		info.append("Type: ")
-		info.append(event.sensor.type)
-		info.append("\n")
-
-		// 最小遅れ
-		var data = event.sensor.minDelay
-		info.append("Mindelay: ")
-		info.append(data)
-		info.append(" usec\n")
-
-		// 最大遅れ
-		data = event.sensor.maxDelay
-		info.append("Maxdelay: ")
-		info.append(data)
-		info.append(" usec\n")
-
-		// レポートモード
-		data = event.sensor.reportingMode
-		var stinfo = "unknown"
-		if (data == 0) {
-			stinfo = "REPORTING_MODE_CONTINUOUS"
-		} else if (data == 1) {
-			stinfo = "REPORTING_MODE_ON_CHANGE"
-		} else if (data == 2) {
-			stinfo = "REPORTING_MODE_ONE_SHOT"
+		if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+			System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
+		} else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
+			System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
 		}
-		info.append("ReportingMode: ")
-		info.append(stinfo)
-		info.append("\n")
 
-		// 最大レンジ
-		info.append("MaxRange: ")
-		var fData = event.sensor.maximumRange
-		info.append(fData)
-		info.append("\n")
+		val rotationMatrix = FloatArray(9)
+		val orientationAngles = FloatArray(3)
 
-		// 分解能
-		info.append("Resolution: ")
-		fData = event.sensor.resolution
-		info.append(fData)
-		info.append(" m/s^2\n")
+		SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading, magnetometerReading)
+		SensorManager.getOrientation(rotationMatrix, orientationAngles)
 
-		// 消費電流
-		info.append("Power: ")
-		fData = event.sensor.power
-		info.append(fData)
-		info.append(" mA\n")
-
-		binding.textInfo.text = info
+		val dx = Math.toDegrees(orientationAngles[0].toDouble())
+		val dy = Math.toDegrees(orientationAngles[1].toDouble())
+		val dz = Math.toDegrees(orientationAngles[2].toDouble())
+		binding.textInfo.text = "Direction: %.1f, %.1f, %.1f".format(dx, dy, dz)
 	}
 
 	override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
