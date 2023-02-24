@@ -13,6 +13,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 	private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
 	private lateinit var sensorManager: SensorManager
+	private val accelerometerReading = FloatArray(3)
+	private val magnetometerReading = FloatArray(3)
+
+	private val rotationMatrix = FloatArray(9)
+	private val orientationAngles = FloatArray(3)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -58,17 +63,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 		}
 
 		//向き
-		val accelerometerReading = FloatArray(3)
-		val magnetometerReading = FloatArray(3)
-
 		if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
 			System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
 		} else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
 			System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
 		}
-
-		val rotationMatrix = FloatArray(9)
-		val orientationAngles = FloatArray(3)
 
 		SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading, magnetometerReading)
 		SensorManager.getOrientation(rotationMatrix, orientationAngles)
