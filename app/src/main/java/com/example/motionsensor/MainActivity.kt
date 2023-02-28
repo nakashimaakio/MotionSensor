@@ -31,21 +31,21 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 		super.onResume()
 
 		//ジャイロ
-		val gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-		if (gyro != null) {
-			sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_UI)
+		val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+		if (gyroscope != null) {
+			sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)
 		}
 
 		//向き
 		val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 		if (accelerometer != null) {
-			sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI)
+			sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
 		}
 
 		//向き
 		val magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
 		if (magneticField != null) {
-			sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI)
+			sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL)
 		}
 	}
 
@@ -66,7 +66,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 		//向き
 		if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
 			System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
-		} else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
+		}
+
+		//向き
+		if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
 			System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
 		}
 
