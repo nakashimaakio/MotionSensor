@@ -10,9 +10,12 @@ import com.example.motionsensor.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
+	/** ViewBinding */
 	private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-	private lateinit var sensorManager: SensorManager
+	/** センサーマネージャー */
+	private val sensorManager by lazy { getSystemService(SENSOR_SERVICE) as SensorManager }
+
 	private val accelerometerReading = FloatArray(3)
 	private val magnetometerReading = FloatArray(3)
 
@@ -22,8 +25,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
-
-		sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 	}
 
 	override fun onResume() {
