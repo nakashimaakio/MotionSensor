@@ -32,21 +32,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 		//ジャイロ
 		val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-		if (gyroscope != null) {
-			sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)
-		}
+		if (gyroscope != null) sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)
 
 		//向き
 		val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-		if (accelerometer != null) {
-			sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-		}
+		if (accelerometer != null) sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
 
 		//向き
 		val magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-		if (magneticField != null) {
-			sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL)
-		}
+		if (magneticField != null) sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL)
 	}
 
 	override fun onPause() {
@@ -60,7 +54,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 			val sensorX = event.values[0]
 			val sensorY = event.values[1]
 			val sensorZ = event.values[2]
-			binding.textView.text = "Gyroscope: %.1f, %.1f, %.1f".format(sensorX, sensorY, sensorZ)
+			binding.textGyro.text = "Gyroscope: %.1f, %.1f, %.1f".format(sensorX, sensorY, sensorZ)
 		}
 
 		//向き
@@ -79,7 +73,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 		val dx = Math.toDegrees(orientationAngles[0].toDouble())
 		val dy = Math.toDegrees(orientationAngles[1].toDouble())
 		val dz = Math.toDegrees(orientationAngles[2].toDouble())
-		binding.textInfo.text = "Direction: %.1f, %.1f, %.1f".format(dx, dy, dz)
+		binding.textDirection.text = "Direction: %.1f, %.1f, %.1f".format(dx, dy, dz)
 	}
 
 	override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}

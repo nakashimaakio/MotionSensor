@@ -8,20 +8,28 @@
 	tools:context=".MainActivity">
 
 	<TextView
-		android:id="@+id/text_view"
-		android:layout_width="wrap_content"
+		android:id="@+id/text_gyro"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:text="No Support"
+		android:layout_marginHorizontal="20dp"
+		android:textSize="24sp"
+		app:layout_constraintBottom_toTopOf="@id/text_direction"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"/>
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_chainStyle="packed"
+		tools:text="Gyroscope: 0.0,0.0,0.0"/>
 
 	<TextView
-		android:id="@+id/text_info"
-		android:layout_width="wrap_content"
+		android:id="@+id/text_direction"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="20dp"
+		android:textSize="24sp"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/text_view"/>
-
+		app:layout_constraintTop_toBottomOf="@id/text_gyro"
+		app:layout_constraintVertical_chainStyle="packed"
+		tools:text="Direction: 0.0,0.0,0.0"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
